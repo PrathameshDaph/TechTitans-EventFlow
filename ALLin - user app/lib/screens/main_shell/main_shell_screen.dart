@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../services/auth_service.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_header.dart';
 import '../../widgets/navigation_drawer.dart';
@@ -29,10 +31,30 @@ class _MainShellScreenState extends State<MainShellScreen> {
   late AppSection _currentSection;
   String? _mapTargetBlock;
 
+  bool _hasCheckedInitialRole = false;
+
   @override
   void initState() {
     super.initState();
     _currentSection = widget.initialSection;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_hasCheckedInitialRole) {
+      _hasCheckedInitialRole = true;
+      final user = context.read<AuthService>().currentUser;
+      if (user != null &&
+          (user.id.toUpperCase().startsWith('V0') ||
+              user.id.toUpperCase().startsWith('AAA') ||
+              user.id.toUpperCase().startsWith('AAB') ||
+              user.id.toUpperCase().startsWith('CREW') ||
+              user.ticketId.toUpperCase().contains('VOL') ||
+              user.ticketId.toUpperCase().contains('CREW'))) {
+        _currentSection = AppSection.myTasks;
+      }
+    }
   }
 
   void _navigateToSection(AppSection section, {String? targetBlock}) {
@@ -49,7 +71,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
       case AppSection.myEvent:
         return 'Match Day & Ticket';
       case AppSection.myTasks:
-        return 'Volunteer Operational Tasks';
+        return 'CREW_IT • Operational Tasks';
       case AppSection.bookParking:
         return 'Event & Rental Parking';
       case AppSection.orderFood:

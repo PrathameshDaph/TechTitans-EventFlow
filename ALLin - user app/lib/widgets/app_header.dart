@@ -47,23 +47,59 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
             ),
             const SizedBox(width: 4),
 
-            // "ALLin" Branding in WHITE/CREAM
+            // "ALLin" Branding in WHITE/CREAM with CREW_IT badge
             Expanded(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'ALLin',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.outfit(
-                      color: AppTheme.creamText,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0.5,
-                    ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'ALLin',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.outfit(
+                          color: AppTheme.creamText,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      if (auth.currentUser != null &&
+                          (auth.currentUser!.id.toUpperCase().startsWith('V0') ||
+                              auth.currentUser!.id.toUpperCase().startsWith('AAA') ||
+                              auth.currentUser!.id.toUpperCase().startsWith('AAB') ||
+                              auth.currentUser!.id.toUpperCase().startsWith('CREW') ||
+                              auth.currentUser!.ticketId.toUpperCase().contains('VOL') ||
+                              auth.currentUser!.ticketId.toUpperCase().contains('CREW'))) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE5A93C),
+                            borderRadius: BorderRadius.circular(6),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            'CREW_IT',
+                            style: GoogleFonts.outfit(
+                              color: AppTheme.coffeeDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.8,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   if (sectionSubtitle != null)
                     Text(

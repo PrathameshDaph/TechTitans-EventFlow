@@ -697,24 +697,74 @@ app.get('/api/activity-feed', (req, res) => {
   return res.json(db.activityFeed);
 });
 
-app.post('/api/notifications/send', (req, res) => {
-  const { title, message, target, targetRole, scope, location, action } = req.body;
+app.get('/api/notifications', (req, res) => {
+  return res.json(db.getNotifications(req.query));
+});
 
-  const evt = broadcastRealtimeEvent({
+app.post('/api/notifications', (req, res) => {
+  const notifResult = db.createNotification(req.body);
+  const notif = notifResult.notification;
+
+  // Broadcast WebSocket notification to all active clients (volunteers, crew, attendees, managers)
+  broadcastRealtimeEvent({
+    type: 'NOTIFICATION_RECEIVED',
+    source: 'manager',
+    target: notif.target || 'ALL',
+    targetRole: notif.targetRole || 'ALL',
+    scope: notif.scope || (notif.target && notif.target !== 'ALL' ? 'individual' : (notif.targetRole && notif.targetRole !== 'ALL' ? 'role' : 'broadcast')),
+    payload: notif,
+  });
+
+  // Secondary legacy/compatibility event trigger
+  broadcastRealtimeEvent({
+    type: 'BROADCAST_ALERT',
+    source: 'manager',
+    target: notif.target || 'ALL',
+    targetRole: notif.targetRole || 'ALL',
+    scope: notif.scope || 'broadcast',
+    payload: notif,
+  });
+
+  return res.json(notifResult);
+});
+
+app.post('/api/notifications/send', (req, res) => {
+  const notifResult = db.createNotification(req.body);
+  const notif = notifResult.notification;
+
+  broadcastRealtimeEvent({
+    type: 'NOTIFICATION_RECEIVED',
+    source: 'manager',
+    target: notif.target || 'ALL',
+    targetRole: notif.targetRole || 'ALL',
+    scope: notif.scope || 'broadcast',
+    payload: notif,
+  });
+
+  broadcastRealtimeEvent({
     type: 'announcement',
     source: 'manager',
-    target,
-    targetRole,
-    scope: scope || 'broadcast',
+    target: notif.target || 'ALL',
+    targetRole: notif.targetRole || 'ALL',
+    scope: notif.scope || 'broadcast',
     payload: {
-      title: title || 'Operational Advisory',
-      message: message || '',
-      location,
-      action,
+      title: notif.title,
+      message: notif.message,
+      location: notif.location,
+      action: notif.action,
+      notification: notif,
     },
   });
 
-  return res.json({ success: true, event: evt });
+  return res.json(notifResult);
+});
+
+app.patch('/api/notifications/:id/read', (req, res) => {
+  const result = db.markNotificationRead(req.params.id);
+  if (!result.success) {
+    return res.status(404).json(result);
+  }
+  return res.json(result);
 });
 
 // 8. System Health

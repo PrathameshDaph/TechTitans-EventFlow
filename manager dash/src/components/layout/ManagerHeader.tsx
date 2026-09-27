@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useOperational } from '../../context/OperationalContext';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -15,11 +15,14 @@ import {
   Smartphone,
   LogOut,
   Radio,
+  Send,
 } from 'lucide-react';
 import { SystemHealthPopover } from './SystemHealthPopover';
+import { PushNotificationModal } from '../dashboard/PushNotificationModal';
 
 export const ManagerHeader: React.FC = () => {
   const { currentUser, logout, connectionStatus } = useAuth();
+  const [isPushModalOpen, setIsPushModalOpen] = useState(false);
   const {
     eventMeta,
     notifications,
@@ -153,6 +156,17 @@ export const ManagerHeader: React.FC = () => {
           )}
         </button>
 
+        {/* Push Notification Broadcast Button */}
+        <button
+          onClick={() => setIsPushModalOpen(true)}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FAF8F5] hover:bg-[#2B211B] hover:text-[#F6F3ED] border border-[#B66A4C]/40 text-[#2B211B] transition-all group cursor-pointer shadow-xs"
+          title="Dispatch Live Push Notification to Volunteers & Field Crew"
+          aria-label="Dispatch Push Notification"
+        >
+          <Radio className="w-3.5 h-3.5 text-[#B66A4C] group-hover:text-[#F6F3ED] group-hover:scale-110 transition-transform animate-pulse" />
+          <span className="text-[11px] font-mono font-bold hidden md:inline">Push Alert</span>
+        </button>
+
         {/* Ask AI Button */}
         <button
           onClick={() => setIsAiAssistantOpen(!isAiAssistantOpen)}
@@ -192,6 +206,11 @@ export const ManagerHeader: React.FC = () => {
           </button>
         </div>
       </div>
+
+      <PushNotificationModal
+        isOpen={isPushModalOpen}
+        onClose={() => setIsPushModalOpen(false)}
+      />
     </header>
   ) : (
     /* Standard Full-width Header for Analytical & Information Pages */
@@ -287,6 +306,19 @@ export const ManagerHeader: React.FC = () => {
             <SystemHealthPopover />
           </div>
 
+          {/* Push Notification Broadcast Button */}
+          <button
+            onClick={() => setIsPushModalOpen(true)}
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white hover:bg-[#2B211B] hover:text-[#F6F3ED] border border-[#B66A4C]/40 text-[#2B211B] transition-all group shadow-xs cursor-pointer"
+            title="Dispatch Live Push Notification to Volunteers & Field Crew"
+            aria-label="Dispatch Push Notification"
+          >
+            <Radio className="w-3.5 h-3.5 text-[#B66A4C] group-hover:text-[#F6F3ED] group-hover:scale-110 transition-transform animate-pulse" />
+            <span className="text-xs font-mono font-bold hidden sm:inline">
+              Push Notification
+            </span>
+          </button>
+
           {/* Weather AI Button */}
           <button
             onClick={() => setActiveRoute('/manager/weather')}
@@ -370,6 +402,11 @@ export const ManagerHeader: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <PushNotificationModal
+        isOpen={isPushModalOpen}
+        onClose={() => setIsPushModalOpen(false)}
+      />
     </header>
   );
 };

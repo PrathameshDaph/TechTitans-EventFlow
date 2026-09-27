@@ -12,6 +12,7 @@ abstract class NotificationRepository {
   Future<void> fetchNotifications();
   Future<void> markAsRead(String id);
   Future<void> deleteNotification(String id);
+  void handleRealtimeNotification(Map<String, dynamic> rawEvent);
   Future<void> reportChildFound({
     required String notificationId,
     required String foundLocationBlock,
@@ -148,6 +149,67 @@ class ApiNotificationRepository implements NotificationRepository {
       );
       _notifications[index] = updated;
       _notify();
+    }
+  }
+
+  @override
+  void handleRealtimeNotification(Map<String, dynamic> rawEvent) {
+    try {
+      final payload = rawEvent['payload'] is Map<String, dynamic>
+          ? rawEvent['payload'] as Map<String, dynamic>
+          : (rawEvent['event'] is Map<String, dynamic>
+              ? (rawEvent['event']['payload'] as Map<String, dynamic>? ?? rawEvent)
+              : rawEvent);
+
+      final notifData = payload['notification'] is Map<String, dynamic>
+          ? payload['notification'] as Map<String, dynamic>
+          : payload;
+
+      final id = notifData['id']?.toString() ?? 'notif_${DateTime.now().millisecondsSinceEpoch}';
+
+      // Avoid duplication
+      if (_notifications.any((n) => n.id == id)) return;
+
+      final itemType = (notifData['type'] ?? rawEvent['type'] ?? '').toString().toUpperCase();
+      final isMissingChild = notifData['isMissingChild'] == true ||
+          itemType == 'MISSING_CHILD' ||
+          itemType == 'CHILD' ||
+          (notifData['title'] ?? '').toString().toLowerCase().contains('missing child');
+
+      NotificationType type = NotificationType.announcement;
+      if (isMissingChild) {
+        type = NotificationType.missingChild;
+      } else if (itemType == 'GATE' || itemType == 'CROWD' || itemType == 'GATE_STATUS_CHANGE') {
+        type = NotificationType.gateUpdate;
+      } else if (itemType == 'PARKING') {
+        type = NotificationType.parkingUpdate;
+      } else {
+        type = NotificationType.announcement;
+      }
+
+      final newItem = NotificationItem(
+        id: id,
+        title: notifData['title']?.toString() ?? 'Manager Operational Advisory',
+        message: notifData['message']?.toString() ?? notifData['body']?.toString() ?? '',
+        timeAgo: notifData['timeAgo']?.toString() ?? 'Just now',
+        type: type,
+        isRead: false,
+        relatedBlock: notifData['relatedBlock']?.toString() ?? notifData['block']?.toString() ?? notifData['location']?.toString() ?? 'A BLOCK',
+        relatedGate: notifData['relatedGate']?.toString() ?? notifData['gate']?.toString() ?? 'Gate 1',
+        isManagerAlert: true,
+        isMissingChild: isMissingChild,
+        childName: notifData['childName']?.toString() ?? (isMissingChild ? 'Aarav Patel' : null),
+        childAge: notifData['childAge']?.toString() ?? (isMissingChild ? '7' : null),
+        childDescription: notifData['childDescription']?.toString() ?? (isMissingChild ? 'Wearing blue jersey and white cap, last seen near Gate 3' : null),
+        childLastSeen: notifData['location']?.toString() ?? (isMissingChild ? 'Gate 3 (Section C)' : null),
+        parentContact: notifData['guardianContact']?.toString() ?? notifData['parentContact']?.toString() ?? '+91 98200 98765',
+        recommendedAction: notifData['recommendedAction']?.toString() ?? notifData['action']?.toString() ?? 'Follow instructions from marshals and stewards.',
+      );
+
+      _notifications.insert(0, newItem);
+      _notify();
+    } catch (e) {
+      debugPrint('[ApiNotificationRepository] Error handling realtime notification: $e');
     }
   }
 

@@ -1054,6 +1054,74 @@ const INITIAL_MESSAGES = [
   },
 ];
 
+const INITIAL_NOTIFICATIONS = [
+  {
+    id: 'notif-01',
+    type: 'CROWD',
+    severity: 'HIGH',
+    title: 'Crowd density surge at Gate G3 Polly Umrigar',
+    message: 'Turnstile intake queue reached 1,420 persons. Ingress diversion along Marine Drive recommended.',
+    location: 'Gate G3 — Polly Umrigar Gate',
+    relatedGate: 'Gate 3',
+    relatedBlock: 'C BLOCK',
+    action: 'Divert queue to overflow lanes.',
+    recommendedAction: 'Divert incoming queue toward Gate A1/D1.',
+    target: 'ALL',
+    targetRole: 'ALL',
+    senderName: 'Command Tower',
+    isManagerAlert: true,
+    isUrgent: false,
+    timeAgo: '2 mins ago',
+    timestamp: '19:20',
+    read: false,
+  },
+  {
+    id: 'notif-02',
+    type: 'MISSING_CHILD',
+    severity: 'CRITICAL',
+    title: 'Missing Child Amber Alert: Aarav Patel (Age 7)',
+    message: 'Wearing blue jersey and white cap. Last seen near Gate 3 Concourse. Field stewards please inspect turnstiles.',
+    location: 'Gate 3 (Section C)',
+    relatedGate: 'Gate 3',
+    relatedBlock: 'C BLOCK',
+    action: 'Monitor turnstiles and call Operations if spotted.',
+    recommendedAction: 'If spotted, please notify nearest field steward.',
+    target: 'ALL',
+    targetRole: 'ALL',
+    senderName: 'Safety Command',
+    isManagerAlert: true,
+    isMissingChild: true,
+    childName: 'Aarav Patel',
+    childAge: 7,
+    childDescription: 'Wearing blue jersey and white cap, last seen near Gate 3',
+    guardianContact: '+91 98200 98765',
+    isUrgent: true,
+    timeAgo: '5 mins ago',
+    timestamp: '19:15',
+    read: false,
+  },
+  {
+    id: 'notif-03',
+    type: 'OPERATIONAL',
+    severity: 'HIGH',
+    title: 'Volunteer Briefing & Shift Alignment',
+    message: 'All volunteers report to assigned section muster points for halftime queue management briefing.',
+    location: 'All Stadium Zones',
+    relatedGate: 'All Gates',
+    relatedBlock: 'All Blocks',
+    action: 'Confirm presence on CREW_IT roster.',
+    recommendedAction: 'Check in with Section Supervisor.',
+    target: 'ALL',
+    targetRole: 'volunteer',
+    senderName: 'Chief Director Vikramaditya',
+    isManagerAlert: true,
+    isUrgent: false,
+    timeAgo: '12 mins ago',
+    timestamp: '19:00',
+    read: false,
+  },
+];
+
 // In-Memory Database State
 class Database {
   constructor() {
@@ -1067,7 +1135,7 @@ class Database {
     this.lostFound = [...INITIAL_LOST_FOUND];
     this.missingPersons = [...INITIAL_MISSING_PERSONS];
     this.messages = [...INITIAL_MESSAGES];
-    this.notifications = [];
+    this.notifications = [...INITIAL_NOTIFICATIONS];
     this.activeSessions = new Map(); // token -> user
     this.deviceTokens = new Map(); // userId -> token
   }
@@ -1546,7 +1614,75 @@ class Database {
       activity: activityItem,
     };
   }
+
+  // Push Notifications Management
+  getNotifications(filter = {}) {
+    let result = [...this.notifications];
+    if (filter.targetRole && filter.targetRole !== 'ALL') {
+      const r = filter.targetRole.toLowerCase();
+      result = result.filter(n => !n.targetRole || n.targetRole.toLowerCase() === 'all' || n.targetRole.toLowerCase().includes(r));
+    }
+    if (filter.target && filter.target !== 'ALL') {
+      const t = filter.target.toLowerCase();
+      result = result.filter(n => !n.target || n.target.toLowerCase() === 'all' || n.target.toLowerCase() === t);
+    }
+    return result;
+  }
+
+  createNotification(notifData) {
+    const newNotif = {
+      id: notifData.id || `notif-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      title: notifData.title || 'Operational Advisory',
+      message: notifData.message || '',
+      type: (notifData.type || 'ANNOUNCEMENT').toUpperCase(),
+      severity: (notifData.severity || 'HIGH').toUpperCase(),
+      target: notifData.target || 'ALL',
+      targetRole: notifData.targetRole || 'ALL',
+      scope: notifData.scope || 'broadcast',
+      location: notifData.location || notifData.relatedBlock || 'Wankhede Stadium',
+      relatedBlock: notifData.relatedBlock || notifData.block || notifData.location || 'A BLOCK',
+      relatedGate: notifData.relatedGate || notifData.gate || 'Gate 1',
+      action: notifData.action || notifData.recommendedAction || 'Follow operational protocols.',
+      recommendedAction: notifData.recommendedAction || notifData.action || 'Follow operational protocols.',
+      senderName: notifData.senderName || 'Command Center',
+      isManagerAlert: true,
+      isUrgent: notifData.isUrgent === true || (notifData.severity && notifData.severity.toUpperCase() === 'CRITICAL'),
+      read: false,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      timeAgo: 'Just now',
+    };
+
+    this.notifications.unshift(newNotif);
+
+    const activityItem = {
+      id: 'act-' + Date.now(),
+      timestamp: newNotif.timestamp,
+      title: `Push Broadcast: ${newNotif.title}`,
+      message: `${newNotif.message} (Target: ${newNotif.targetRole || newNotif.target || 'ALL'})`,
+      type: 'notification_broadcast',
+      source: 'Manager Dispatch Desk',
+      target: newNotif.target,
+      badge: newNotif.isUrgent ? 'URGENT PUSH' : 'PUSH ALERT',
+    };
+    this.activityFeed.unshift(activityItem);
+
+    return {
+      success: true,
+      notification: newNotif,
+      activity: activityItem,
+    };
+  }
+
+  markNotificationRead(id) {
+    const notif = this.notifications.find(n => n.id.toLowerCase() === id.toLowerCase());
+    if (notif) {
+      notif.read = true;
+      return { success: true, notification: notif };
+    }
+    return { success: false, message: 'Notification not found' };
+  }
 }
 
 const db = new Database();
-module.exports = { db, Database, INITIAL_TASKS, INITIAL_LOST_FOUND, INITIAL_MISSING_PERSONS, INITIAL_MESSAGES };
+module.exports = { db, Database, INITIAL_TASKS, INITIAL_LOST_FOUND, INITIAL_MISSING_PERSONS, INITIAL_MESSAGES, INITIAL_NOTIFICATIONS };
+

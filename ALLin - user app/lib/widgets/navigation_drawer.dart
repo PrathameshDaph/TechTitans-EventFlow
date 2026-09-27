@@ -225,19 +225,59 @@ class AppNavigationDrawer extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               children: [
+                if (user != null &&
+                    (user.id.toUpperCase().startsWith('V0') ||
+                        user.id.toUpperCase().startsWith('AAA') ||
+                        user.id.toUpperCase().startsWith('AAB') ||
+                        user.id.toUpperCase().startsWith('CREW') ||
+                        user.ticketId.toUpperCase().contains('VOL') ||
+                        user.ticketId.toUpperCase().contains('CREW'))) ...[
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 8, top: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE5A93C).withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0xFFE5A93C).withOpacity(0.4)),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.shield_rounded, size: 14, color: Color(0xFF96631E)),
+                        const SizedBox(width: 6),
+                        Text(
+                          'CREW_IT • FIELD OPERATIONS',
+                          style: GoogleFonts.outfit(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            color: const Color(0xFF96631E),
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                _buildNavItem(
+                  context: context,
+                  section: AppSection.myTasks,
+                  title: (user != null &&
+                          (user.id.toUpperCase().startsWith('V0') ||
+                              user.id.toUpperCase().startsWith('AAA') ||
+                              user.id.toUpperCase().startsWith('AAB') ||
+                              user.id.toUpperCase().startsWith('CREW') ||
+                              user.ticketId.toUpperCase().contains('VOL') ||
+                              user.ticketId.toUpperCase().contains('CREW')))
+                      ? 'CREW_IT TASKS'
+                      : 'MY TASKS',
+                  icon: Icons.checklist_rtl_outlined,
+                  activeIcon: Icons.checklist_rtl_rounded,
+                ),
                 _buildNavItem(
                   context: context,
                   section: AppSection.myEvent,
                   title: 'MY EVENT',
                   icon: Icons.confirmation_number_outlined,
                   activeIcon: Icons.confirmation_number_rounded,
-                ),
-                _buildNavItem(
-                  context: context,
-                  section: AppSection.myTasks,
-                  title: 'MY TASKS',
-                  icon: Icons.checklist_rtl_outlined,
-                  activeIcon: Icons.checklist_rtl_rounded,
                 ),
                 _buildNavItem(
                   context: context,

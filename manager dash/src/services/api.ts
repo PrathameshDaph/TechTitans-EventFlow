@@ -550,6 +550,47 @@ export async function broadcastFanAdvisory(
   return newBroadcast;
 }
 
+export interface PushNotificationPayload {
+  title: string;
+  message: string;
+  type?: string;
+  severity?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  target?: string;
+  targetRole?: string;
+  scope?: 'broadcast' | 'role' | 'individual' | 'zone';
+  location?: string;
+  relatedBlock?: string;
+  relatedGate?: string;
+  action?: string;
+  recommendedAction?: string;
+  senderName?: string;
+  isUrgent?: boolean;
+}
+
+// 26b. /api/notifications (Push to Volunteer / Crew / Attendees)
+export async function sendPushNotification(
+  payload: PushNotificationPayload
+): Promise<{ success: boolean; notification?: any; message?: string }> {
+  try {
+    const res = await fetch(`${apiBaseUrl}/notifications`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) return await res.json();
+  } catch (err) {
+    console.warn('[EventFlow API] Push notification endpoint error, falling back locally:', err);
+  }
+  return {
+    success: true,
+    notification: {
+      id: `notif-${Date.now()}`,
+      ...payload,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    },
+  };
+}
+
 // 27. /api/crew/:crewId/telemetry
 export async function updateCrewTelemetry(
   crewId: string,

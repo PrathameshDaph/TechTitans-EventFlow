@@ -55,9 +55,10 @@ class ALLinApp extends StatelessWidget {
     final contactRepository = MockContactRepository();
     final taskProvider = TaskProvider();
 
-    // Hook WebSocket real-time events to TaskProvider
+    // Hook WebSocket real-time events to TaskProvider & NotificationRepository
     WebSocketService().addListener((data) {
       taskProvider.handleWebSocketEvent(data);
+      notificationRepository.handleRealtimeNotification(data);
     });
 
     return MultiProvider(

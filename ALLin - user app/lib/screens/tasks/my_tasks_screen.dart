@@ -51,27 +51,52 @@ class _MyTasksScreenState extends State<MyTasksScreen>
       appBar: AppBar(
         elevation: 0,
         backgroundColor: AppTheme.coffeeBrown,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppTheme.creamText, size: 20),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        leading: Navigator.of(context).canPop()
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new, color: AppTheme.creamText, size: 20),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            : const Padding(
+                padding: EdgeInsets.all(14.0),
+                child: Icon(Icons.shield_rounded, color: Color(0xFFE5A93C), size: 24),
+              ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'MY TASKS',
-              style: TextStyle(
-                color: AppTheme.creamText,
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.5,
-              ),
+            Row(
+              children: [
+                const Text(
+                  'CREW_IT TASKS',
+                  style: TextStyle(
+                    color: AppTheme.creamText,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE5A93C),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: const Text(
+                    'LIVE',
+                    style: TextStyle(
+                      color: AppTheme.coffeeDark,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+              ],
             ),
             Text(
-              '${user?.name ?? "Volunteer"} • ${user?.assignedBlock ?? "Perimeter"}',
+              '${user?.name ?? "Staff"} • ${user?.assignedBlock ?? "Perimeter"} • ${user?.id ?? "CREW"}',
               style: TextStyle(
                 color: AppTheme.creamText.withOpacity(0.75),
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: FontWeight.w500,
               ),
             ),
