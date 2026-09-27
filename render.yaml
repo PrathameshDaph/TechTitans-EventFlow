@@ -1,0 +1,31 @@
+services:
+  # 1. EventFlow Backend & WebSocket Server
+  - type: web
+    name: eventflow-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server/index.js
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: NODE_ENV
+        value: production
+
+  # 2. EventFlow Operations Manager Dashboard
+  - type: web
+    name: eventflow-manager-dashboard
+    runtime: static
+    buildCommand: cd "manager dash" && npm install && npm run build
+    staticPublishPath: ./manager dash/dist
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+
+  # 3. EventFlow Landing Page
+  - type: web
+    name: eventflow-landing
+    runtime: static
+    buildCommand: cd "HACHCELESTIAL Landing Page" && npm install && npm run build
+    staticPublishPath: ./HACHCELESTIAL Landing Page/dist
