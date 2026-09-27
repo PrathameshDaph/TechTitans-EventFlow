@@ -1,9 +1,16 @@
 {
+  "name": "tech-titans-eventflow",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server/index.js",
+    "build": "cd \"HACHCELESTIAL Landing Page\" && npm install && npm run build && cp -r dist ../dist",
+    "build:manager": "cd \"manager dash\" && npm install && npm run build",
+    "build:landing": "cd \"HACHCELESTIAL Landing Page\" && npm install && npm run build"
+  },
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "tailwindcss": "^4.3.3",
     "ws": "^8.22.0"
   }
 }
