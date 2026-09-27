@@ -1,0 +1,281 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #F6F3ED;
+  --color-background-secondary: #EEE9DF;
+  --color-card: #FFFFFF;
+  --color-primary: #2B211B;
+  --color-primary-hover: #3d2f26;
+  --color-secondary: #5A4638;
+  --color-muted-brown: #806C5D;
+  --color-light-brown: #9E8574;
+  --color-terracotta: #B66A4C;
+  --color-terracotta-hover: #9E563A;
+  --color-terracotta-light: #F8EDE8;
+  --color-beige: #EEE9DF;
+  --color-beige-dark: #E2DBD0;
+  --color-border: #E3DDD2;
+  --color-border-light: rgba(43, 33, 27, 0.08);
+  --color-main-text: #2B211B;
+  --color-secondary-text: #766C63;
+  --color-status-success: #2E7D32;
+  --color-status-success-bg: #E8F5E9;
+  --color-status-warning: #D97706;
+  --color-status-warning-bg: #FEF3C7;
+  --color-status-critical: #DC2626;
+  --color-status-critical-bg: #FEE2E2;
+
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+
+  --shadow-glass: 0 8px 32px 0 rgba(43, 33, 27, 0.08), 0 2px 8px 0 rgba(43, 33, 27, 0.04);
+  --shadow-glass-lg: 0 16px 40px -8px rgba(43, 33, 27, 0.16), 0 4px 12px 0 rgba(43, 33, 27, 0.05);
+  --shadow-soft: 0 2px 10px rgba(43, 33, 27, 0.04), 0 1px 3px rgba(43, 33, 27, 0.02);
+  --shadow-medium: 0 8px 24px rgba(43, 33, 27, 0.07), 0 2px 6px rgba(43, 33, 27, 0.03);
+  --shadow-elevated: 0 20px 48px rgba(43, 33, 27, 0.14), 0 4px 16px rgba(43, 33, 27, 0.06);
+}
+
+:root {
+  --bg-main: #F6F3ED;
+  --bg-secondary: #EEE9DF;
+  --card-bg: #FFFFFF;
+  --color-primary: #2B211B;
+  --color-secondary: #5A4638;
+  --color-terracotta: #B66A4C;
+  --color-border: #E3DDD2;
+  --color-text: #2B211B;
+  --color-text-muted: #766C63;
+}
+
+body {
+  background-color: #F6F3ED;
+  color: #2B211B;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F6F3ED;
+}
+::-webkit-scrollbar-thumb {
+  background: #D8CEBF;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B66A4C;
+}
+
+/* Glassmorphism & Apple Liquid Glass System */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(43, 33, 27, 0.08);
+}
+
+.glass-panel-warm {
+  background: rgba(246, 243, 237, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(43, 33, 27, 0.1);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(43, 33, 27, 0.10);
+  box-shadow: 0 4px 16px rgba(43, 33, 27, 0.06);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-pill:hover {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 8px 24px rgba(43, 33, 27, 0.10);
+  transform: translateY(-1px);
+}
+
+.glass-pill:active {
+  transform: translateY(0);
+}
+
+/* Apple Liquid Glass Core Tokens */
+.liquid-glass-base {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 10px 40px rgba(43, 33, 27, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.liquid-glass-card {
+  background: rgba(255, 255, 255, 0.60);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 8px 32px rgba(43, 33, 27, 0.06),
+    0 2px 8px rgba(43, 33, 27, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.liquid-glass-card:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.90);
+  box-shadow:
+    0 12px 36px rgba(43, 33, 27, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.liquid-glass-card-warm {
+  background: rgba(246, 243, 237, 0.65);
+  backdrop-filter: blur(24px) saturate(135%);
+  -webkit-backdrop-filter: blur(24px) saturate(135%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 8px 32px rgba(43, 33, 27, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.liquid-glass-frost-overlay {
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  background-color: rgba(246, 243, 237, 0.55);
+}
+
+/* Vector Digital Twin Map styling */
+.map-canvas-bg {
+  background-color: #F3EFE7;
+  background-size: 28px 28px;
+  background-image: 
+    linear-gradient(to right, rgba(90, 70, 56, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(90, 70, 56, 0.05) 1px, transparent 1px);
+}
+
+/* Leaflet Zero Watermark & Full Canvas Styling */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  background-color: #F6F3ED !important;
+  font-family: inherit;
+}
+
+.leaflet-control-attribution,
+.leaflet-control-container .leaflet-bottom.leaflet-right,
+.leaflet-bottom.leaflet-right {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.leaflet-pane {
+  z-index: 10 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 20 !important;
+}
+
+/* Animated flow lines on map */
+@keyframes dashRoute {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+.route-animated-dash {
+  stroke-dasharray: 6 6;
+  animation: dashRoute 2s linear infinite;
+}
+
+.route-alert-dash {
+  stroke-dasharray: 8 6;
+  animation: dashRoute 1.4s linear infinite;
+}
+
+/* Micro-animations */
+@keyframes softPulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.85; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-soft-pulse {
+  animation: softPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pingSlow {
+  0% { transform: scale(1); opacity: 0.8; }
+  75%, 100% { transform: scale(2.2); opacity: 0; }
+}
+
+.animate-ping-slow {
+  animation: pingSlow 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.04); }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulseRedRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+.pulse-critical {
+  animation: pulseRedRing 1.8s infinite;
+}
+
+/* Glassmorphism for Landing Page */
+.glass-panel {
+  background: rgba(22, 13, 17, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(217, 125, 151, 0.14);
+}
+
+.glass-panel-glow {
+  background: rgba(30, 16, 23, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(217, 125, 151, 0.4);
+  box-shadow: 0 0 35px -8px rgba(217, 125, 151, 0.25);
+}
+
+.glass-panel-subtle {
+  background: rgba(18, 10, 14, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Glow Effects */
+.glow-rosegold {
+  text-shadow: 0 0 25px rgba(217, 125, 151, 0.6);
+}
+
+.glow-wine {
+  box-shadow: 0 0 40px -5px rgba(92, 42, 53, 0.4);
+}

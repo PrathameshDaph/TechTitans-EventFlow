@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-alice: 'Alice', serif;
+    --font-heading: 'Outfit', sans-serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #0a0608;
+    color: #f7eff2;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Custom Scrollbar in Rose Gold & Deep Wine */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0608;
+}
+::-webkit-scrollbar-thumb {
+  background: #3b1923;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a64d67;
+}
+
+/* Glassmorphism Harmonized with Rose Gold & Wine of the Logo */
+.glass-panel {
+  background: rgba(22, 13, 17, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(217, 125, 151, 0.14);
+}
+
+.glass-panel-glow {
+  background: rgba(30, 16, 23, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(217, 125, 151, 0.4);
+  box-shadow: 0 0 35px -8px rgba(217, 125, 151, 0.25);
+}
+
+.glass-panel-subtle {
+  background: rgba(18, 10, 14, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Glow Effects */
+.glow-rosegold {
+  text-shadow: 0 0 25px rgba(217, 125, 151, 0.6);
+}
+
+.glow-wine {
+  box-shadow: 0 0 40px -5px rgba(92, 42, 53, 0.4);
+}
+
+/* Grid background pattern with warm rose-gold tint */
+.bg-grid-cyber {
+  background-image: 
+    linear-gradient(to right, rgba(217, 125, 151, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(217, 125, 151, 0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Floating animation */
+@keyframes float-subtle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float-subtle 6s ease-in-out infinite;
+}

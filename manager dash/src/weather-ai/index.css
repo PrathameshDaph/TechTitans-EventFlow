@@ -1,0 +1,106 @@
+.weather-ai-root {
+  --bg-primary: #F7F4ED;
+  --brand-primary: #2B1710;
+  --cream-surface: #EFE8DB;
+  --card-surface: #FFFEFB;
+  --border-subtle: #E4DED3;
+  --text-main: #2A211D;
+  --text-muted: #756D66;
+  --success: #2F7D45;
+  --warning: #D9822B;
+  --critical: #D92D3A;
+
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  width: 100%;
+}
+
+/* Custom Operational UI Utility Classes */
+.bg-subtle-pattern {
+  background-color: #F7F4ED;
+  background-image: radial-gradient(#E4DED3 0.85px, transparent 0.85px);
+  background-size: 20px 20px;
+}
+
+.glass-card {
+  background: rgba(255, 254, 251, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid #E4DED3;
+  box-shadow: 0 4px 20px -2px rgba(43, 23, 16, 0.05);
+}
+
+.glass-panel-dark {
+  background: rgba(43, 23, 16, 0.94);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #FFFEFB;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #EFE8DB;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #C4BCB1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #A89F93;
+}
+
+/* Radar & Scanning Animations */
+@keyframes radarSweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-radar-sweep {
+  animation: radarSweep 6s linear infinite;
+  transform-origin: center center;
+}
+
+@keyframes flowParticle {
+  0% { stroke-dashoffset: 200; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.flow-anim {
+  stroke-dasharray: 6 6;
+  animation: flowParticle 2s linear infinite;
+}
+
+.flow-anim-reverse {
+  stroke-dasharray: 6 6;
+  animation: flowParticle 2s linear infinite reverse;
+}
+
+/* Pulse Glows */
+.badge-pulse-warning {
+  box-shadow: 0 0 0 0 rgba(217, 130, 43, 0.5);
+  animation: pulseWarning 2s infinite;
+}
+
+@keyframes pulseWarning {
+  0% { box-shadow: 0 0 0 0 rgba(217, 130, 43, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(217, 130, 43, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 130, 43, 0); }
+}
+
+.badge-pulse-critical {
+  box-shadow: 0 0 0 0 rgba(217, 45, 58, 0.5);
+  animation: pulseCritical 1.6s infinite;
+}
+
+@keyframes pulseCritical {
+  0% { box-shadow: 0 0 0 0 rgba(217, 45, 58, 0.5); }
+  70% { box-shadow: 0 0 0 10px rgba(217, 45, 58, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 45, 58, 0); }
+}
